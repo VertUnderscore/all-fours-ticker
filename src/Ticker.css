@@ -1,0 +1,18 @@
+.buttonLarge {
+    width: 200px;
+    height: 50px;
+    color: black;
+    font-size: xx-large;
+}
+
+.red {
+    background-color: red;
+}
+
+.green {
+    background-color: green;
+}
+
+.purple {
+    background-color: purple;
+}

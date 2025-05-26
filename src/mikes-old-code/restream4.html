@@ -1,0 +1,626 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.0/animate.min.css" integrity="sha256-6hqHMqXTVEds1R8HgKisLm3l/doneQs+rS1a5NLmwwo=" crossorigin="anonymous" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"/>
+		<style>
+			@font-face {
+				font-family: 'Corbel';
+				src: url('/static/font/Corbel.ttf');
+			}
+
+			@font-face {
+				font-family: 'DiscotecaRounded';
+				src: url('/static/font/DiscotecaRounded.ttf');
+			}
+
+			body {
+				font-family: 'Roboto';
+			}
+
+			.flex-column {
+				display: flex;
+				flex-direction: column;
+			}
+
+			.flex-row {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			#layout {
+				width: 1280px;
+				height: 720px;
+
+				background-image: url('/static/background/2021-TossUp-4.png');
+				background-size: contain;
+				overflow: hidden;
+
+				font-family: DiscotecaRounded;
+
+				border: 6px solid #ff00ff;
+
+				position: relative;
+			}
+
+			#controls {
+				justify-content: space-between;
+			}
+
+			.video-container {
+				width: 437px;
+				height: 328px;
+				overflow: hidden;
+
+				background-color: black;
+				box-shadow: 0px 3px 10px -3px rgba(0, 0, 0, 0.75);
+			}
+
+			.video {
+				object-fit: fill;
+
+				background-color: black;
+			}
+
+			.player {
+				margin-top: 8px;
+				align-items: center;
+
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-end;
+
+				position: absolute;
+			}
+
+			#player1 {
+				left: 437px;
+				right: 469px;
+				top: 16px;
+			}
+
+			#player2 {
+				left: 469px;
+				right: 437px;
+				top: 96px;
+			}
+
+			#player3 {
+				left: 437px;
+				right: 469px;
+				bottom: 16px;
+			}
+
+			#player4 {
+				left: 469px;
+				right: 437px;
+				bottom: 96px;
+			}
+
+			.player-container:nth-child(even) .player {
+				flex-direction: row-reverse;
+			}
+
+			.player-container:nth-child(3),.player-container:nth-child(4) {
+				margin-top: 64px;
+			}
+
+			.name-container {
+				width: 100%;
+
+				margin-right: 8px;
+				margin-left: 0px;
+
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-end;
+				align-items: center;
+
+				background-color: rgba(0,6,14,0.7);
+				box-shadow: 0px 3px 10px -3px rgba(0,0,0,0.75);
+			}
+
+			.player-container:nth-child(even) .name-container {
+				margin-left: 8px;
+				margin-right: 0px;
+				flex-direction: row-reverse;
+			}
+			
+			.nameplate {
+				height: 60px;
+
+				justify-content: space-between;
+			}
+
+			.nameplate, .nameplate * {
+				margin: 0 8px;
+			}
+
+			.name, .flag {
+				z-index: 2;
+			}
+
+			.name {
+				font-size: 36px;
+
+				flex: 0;
+				margin: 0 16px 0 8px;
+
+				color: white;
+				text-shadow: 0px 3px 2px rgba(0, 0, 0, 0.75), 0px -2px 0px rgba(0, 0, 0, 0.75);
+			}
+
+			.player-container:nth-child(even) .name {
+				margin: 0 8px 0 16px;
+			}
+
+			.flag {
+				max-height: 24px;
+				margin-top: -1px;
+
+				box-shadow: 0px 3px 10px -3px rgba(0, 0, 0, 0.75);
+			}
+
+			.slide-text {
+				flex: 0;
+				visibility: hidden;
+
+				text-transform: uppercase;
+				color: white;
+				font-weight: bold;
+
+				text-shadow: 0px 2px 1px rgba(0, 0, 0, 0.75), 0px -1px 0px rgba(0, 0, 0, 0.75);
+
+				font-size: 14px;
+			}
+
+			.winner {
+				color: #ffeb3b;
+			}
+
+			.forfeit {
+				color: #ff7373;
+			}
+
+			.timer {
+				width: 172px;
+				height: 60px;
+
+				background-color: black;
+				box-shadow: 0px 3px 10px -3px rgba(0,0,0,0.75);
+			}
+
+			#controls, #staff-controls {
+				width: 1280px;
+			}
+
+			.controls-container {
+				width: 636px;
+			}
+
+			input[type="text"], span {
+				flex: 1;
+			}
+
+			#staff-controls {
+				margin-top: 8px;
+			}
+
+			#logo {
+				max-height: 148px;
+			}
+
+			#lhs, #rhs {
+				flex: 1;
+			}
+
+			#lhs {
+				display: none;
+			}
+
+			#seal {
+				width: 96px;
+				height: 96px;
+
+				position: absolute;
+				bottom: 168px;
+				left: 732px;
+
+				opacity: 0.8;
+			}
+
+			#rhs {
+				font-size: 28px;
+				color: white;
+			}
+
+			#rhs img, #rhs span {
+				vertical-align: middle;
+				line-height: 1.5em;
+			}
+
+			#rhs span {
+				text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+			}
+
+			.icon-commentator, .icon-restreamer {
+				margin-right: 8px;
+				height: 28px;
+				filter: invert(100%) sepia(100%) saturate(2%) hue-rotate(63deg) brightness(106%) contrast(101%) drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.75));
+			}
+
+			#title {
+				color: white;
+				text-shadow: 0px 2px 1px rgba(0, 0, 0, 0.75), 0px -1px 0px rgba(0, 0, 0, 0.75);
+
+				font-size: 42px;
+
+				margin: 16px 0;
+			}
+
+			#ticker {
+				height: 48px;
+			}
+
+			#players {
+				flex-wrap: wrap;
+				min-width: 1280px;
+				max-width: 1280px;
+				min-height: 720px;
+				max-height: 720px;
+			}
+
+			#info {
+				position: absolute;
+
+				top: 172px;
+				left: 469px;
+				right: 469px;
+
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="main-container" class="flex-column">
+			<div id="layout" class="flex-column">
+				<div id="players" class="flex-row"></div>
+				
+				<div id="info" class="flex-column">
+					<div id="lhs">
+						
+					</div>
+
+					<div id="mid">
+						<img id="logo" src="/static/logo/2021-TossUp.png">
+					</div>
+
+					<div id="rhs">
+						<div id="title">&nbsp;</div>
+
+						<img class="icon-commentator" src="/static/icon/microphone.svg"> <span id="commentators">&nbsp;</span><br />
+						<img class="icon-restreamer" src="/static/icon/camera.svg"> <span id="restreamer">&nbsp;</span>
+					</div>
+				</div>
+				
+				<img id="seal" src="/static/seal.png">
+				<div id="ticker" class="flex-row"></div>
+			</div>
+
+			<div id="controls" class="flex-row"></div>
+			<div id="staff-controls" class="flex-row">
+				<span>
+					<label>Commentary:</label>
+					<input type="text" id="field-commentary">
+				
+					<label>Restream:</label>
+					<input type="text" id="field-restream">
+
+					<label>Title:</label>
+					<input type="text" id="field-title">
+				</span>
+			</div>
+		</div>
+
+		<template id="player-display">
+			<div class="player-container flex-row">
+				<div class="video-container">
+					<video class="video"></video>
+				</div>
+
+				<div class="player">
+					<div class="name-container">
+						<div class="slide-text animate__animated animate__faster"></div>
+
+						<div class="nameplate flex-row">
+							<img class="flag" src="" />
+							<span class="name"></span>
+						</div>
+					</div>
+
+					<canvas class="timer"></canvas>
+				</div>
+			</div>
+		</template>
+
+		<template id="player-controls">
+			<div class="controls-container flex-column">
+				<div class="flex-row">
+					<label>Twitch Name:</label>
+					<input type="text" class="field-twitch">
+
+					<input type="button" class="btn-load" value="Load">
+					<input type="button" class="btn-kill" value="Kill">
+					<input type="button" class="btn-pause" value="⏸️" disabled>
+				</div>
+
+				<div class="flex-row">
+					<label>Volume:</label>
+					<input type="range" class="field-volume" min="1" max="100" value="100">
+
+					<input type="button" class="btn-audio" value="🔇" disabled>
+				</div>
+
+				<div class="flex-row">
+					<input type="button" class="btn-crop" value="Recrop" disabled>
+					<input type="button" class="btn-timer" value="Toggle Timer" disabled>
+					<input type="button" class="btn-forfeit" value="😢">
+					<input type="button" class="btn-win" value="🏆">					
+				</div>
+
+				<hr>
+
+				<div class="flex-row">
+					<span>
+						<label>Country:</label>
+						<input type="text" class="field-country">
+					</span>
+
+					<span>
+						<label>Display Name:</label>
+						<input type="text" class="field-displayname">
+					</span>
+				</div>
+			</div>
+		</template>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.13.2/hls.min.js" integrity="sha256-S6G8rwpAJ/lz4GQ6WIxL4SnvpBzzunXj7j7V8VHX/XY=" crossorigin="anonymous"></script>
+		<script>
+			'esversion: 8';
+			templates = {
+				playerDisplay: document.getElementById('player-display'),
+				playerControls: document.getElementById('player-controls'),
+			};
+
+			containers = {
+				players: document.getElementById('players'),
+				controls: document.getElementById('controls'),
+			};
+
+			players = {
+				player1: addPlayer(1),
+				player2: addPlayer(2),
+				player3: addPlayer(3),
+				player4: addPlayer(4)
+			};
+
+			// send the heartbeat to keep the streams going
+			setInterval(function() {
+				let endpoint = '/heartbeat?'
+				for(player in players) {
+					endpoint += `player=${players[player].twitchField.value}&`;
+				}
+				fetch(endpoint);
+			}, 10000);
+
+			commentatorField = document.getElementById('field-commentary');
+			restreamerField = document.getElementById('field-restream');
+			titleField = document.getElementById('field-title');
+
+			commentatorField.addEventListener('change', function() {
+				document.getElementById('commentators').innerHTML = commentatorField.value;
+			});
+
+			restreamerField.addEventListener('change', function() {
+				document.getElementById('restreamer').innerHTML = restreamerField.value;
+			});
+
+			titleField.addEventListener('change', function() {
+				document.getElementById('title').innerHTML = titleField.value;
+			});
+
+			function addPlayer(playerNum) {
+				let player = templates.playerDisplay.content.cloneNode(true),
+					controls = templates.playerControls.content.cloneNode(true);
+
+				player.querySelector('.player').id = 'player' + playerNum;
+				
+				let playerObj = {
+					playernum: playerNum,
+
+					name: player.querySelector('.name'),
+					video: player.querySelector('.video'),
+					timer: player.querySelector('.timer'),
+					flag: player.querySelector('.flag'),
+					slideText: player.querySelector('.slide-text'),
+
+					winBtn: controls.querySelector('.btn-win'),
+					forfeitBtn: controls.querySelector('.btn-forfeit'),
+					pauseBtn: controls.querySelector('.btn-pause'),
+					audioBtn: controls.querySelector('.btn-audio'),
+					cropBtn: controls.querySelector('.btn-crop'),
+					loadBtn: controls.querySelector('.btn-load'),
+					killBtn: controls.querySelector('.btn-kill'),
+					timerBtn: controls.querySelector('.btn-timer'),
+
+					twitchField: controls.querySelector('.field-twitch'),
+					countryField: controls.querySelector('.field-country'),
+					displayNameField: controls.querySelector('.field-displayname'),
+					volumeField: controls.querySelector('.field-volume'),
+				}
+
+				playerObj.loadBtn.addEventListener('click', function() {
+					playerObj.name.innerHTML = playerObj.displayNameField.value != "" ? playerObj.displayNameField.value : playerObj.twitchField.value;
+					if(playerObj.countryField.value != '') {
+						playerObj.flag.src = `https://www.speedrun.com/images/flags/${playerObj.countryField.value}.png`;
+						playerObj.flag.style.display = '';
+					} else {
+						playerObj.flag.style.display = 'none';
+					}
+
+					fetch(`/start?player=${playerObj.twitchField.value}`).then(function(response) {
+						return response.json();
+					}).then(function(json) {
+						if(!('timer' in json) || !('game' in json)) {
+							window.open(`/crop?player=${playerObj.twitchField.value}`);
+							return
+						}
+
+						loadPlayer(playerObj, json);
+					});
+
+					playerObj.loadBtn.disabled = true;
+					setTimeout(function() {
+						playerObj.loadBtn.disabled = false;
+					}, 15000);
+				});
+
+				playerObj.killBtn.addEventListener('click', function() {
+					playerObj.video.pause();
+					playerObj.pauseBtn.disabled = true;
+					playerObj.audioBtn.disabled = true;
+					playerObj.cropBtn.disabled = true;
+					playerObj.timerBtn.disabled = true;
+
+					playerObj.loadBtn.disabled = true;
+					setTimeout(function() {
+						playerObj.loadBtn.disabled = false;
+					}, 5000);
+
+					fetch(`/stop?player=${playerObj.twitchField.value}`);
+				});
+
+				playerObj.volumeField.addEventListener('change', function() {
+					playerObj.video.volume = playerObj.volumeField.value / 100;
+				});
+
+				playerObj.audioBtn.addEventListener('click', function() {
+					if(playerObj.video.volume == 0) {
+						playerObj.video.volume = playerObj.volumeField.value / 100;
+						playerObj.volumeField.disabled = false;
+					} else {
+						playerObj.video.volume = 0;
+						playerObj.volumeField.disabled = true;
+					}
+				});
+
+				playerObj.winBtn.addEventListener('click', function() {
+					let slideClass = playerObj.playernum % 2 ? 'animate__slideInRight' : 'animate__slideInLeft';
+					playerObj.slideText.classList.remove('forfeit');
+					if(playerObj.slideText.classList.contains('winner')) {
+						playerObj.slideText.classList.remove('winner', slideClass);
+						playerObj.slideText.innerHTML = '';
+					} else {
+						playerObj.slideText.classList.add('winner');
+						playerObj.slideText.classList.add(slideClass);
+						playerObj.slideText.innerHTML = 'Winner';
+						playerObj.slideText.style.visibility = 'visible';
+					}
+				});
+
+				playerObj.forfeitBtn.addEventListener('click', function() {
+					let slideClass = playerObj.playernum % 2 ? 'animate__slideInRight' : 'animate__slideInLeft';
+					playerObj.slideText.classList.remove('winner');
+					if(playerObj.slideText.classList.contains('forfeit')) {
+						playerObj.slideText.classList.remove('forfeit', slideClass);
+						playerObj.slideText.innerHTML = '';
+					} else {
+						playerObj.slideText.classList.add('forfeit', slideClass);
+						playerObj.slideText.innerHTML = 'Forfeit';
+						playerObj.slideText.style.visibility = 'visible';
+					}
+				});
+
+				playerObj.cropBtn.addEventListener('click', function() {
+					window.open(`/crop?player=${playerObj.twitchField.value}`);
+				});
+
+				playerObj.pauseBtn.addEventListener('click', function() {
+					if(playerObj.video.paused) {
+						playerObj.video.play();
+						playerObj.pauseBtn.value = "⏸️";
+
+						clearTimeout(playerObj.copyTimer);
+						copyTimerFrame(playerObj, playerObj.cx, playerObj.cy, playerObj.cw, playerObj.ch);
+					} else {
+						playerObj.video.pause();
+						playerObj.pauseBtn.value = "▶️";
+					}
+				});
+
+				playerObj.timerBtn.addEventListener('click', function() {
+					if(playerObj.ignoreTimer) {
+						clearTimeout(playerObj.copyTimer);
+						copyTimerFrame(playerObj, playerObj.cx, playerObj.cy, playerObj.cw, playerObj.ch);
+					} else {
+						playerObj.ignoreTimer = true;
+						playerObj.timer.getContext('2d').clearRect(0, 0, playerObj.timer.width, playerObj.timer.height);
+					}
+				});
+
+				containers.players.appendChild(player);
+				containers.controls.appendChild(controls);
+
+				return playerObj;
+			};
+
+			function loadPlayer(playerObj, json) {
+				let hls = new Hls({
+					liveBackBufferLength: 900
+				});
+				hls.loadSource(`/video/${playerObj.twitchField.value.toLowerCase()}-stream.m3u8`);
+				hls.attachMedia(playerObj.video);
+				hls.on(Hls.Events.MANIFEST_PARSED, function() {
+					playerObj.video.play();
+					playerObj.pauseBtn.disabled = false;
+					playerObj.audioBtn.disabled = false;
+					playerObj.cropBtn.disabled = false;
+					playerObj.timerBtn.disabled = false;
+				});
+
+				playerObj.video.addEventListener('loadeddata', function() {
+					playerObj.cx = json.timer.left,
+					playerObj.cy = json.timer.top,
+					playerObj.cw = playerObj.video.videoWidth - json.timer.right - json.timer.left,
+					playerObj.ch = playerObj.video.videoHeight - json.timer.bottom - json.timer.top;						
+					
+					clearTimeout(playerObj.copyTimer);
+					copyTimerFrame(playerObj, playerObj.cx, playerObj.cy, playerObj.cw, playerObj.ch);
+
+					let sw = (437 / (playerObj.video.videoWidth - json.game.left - json.game.right)),
+						sh = (328 / (playerObj.video.videoHeight - json.game.top - json.game.bottom));
+
+					playerObj.video.style.width = 437+Math.floor(sw * json.game.left) + Math.floor(sw * json.game.right);
+					playerObj.video.style.height = 328+Math.floor(sh * json.game.top) + Math.floor(sh * json.game.bottom);
+
+					playerObj.video.style.marginLeft = 0-Math.floor(sw * json.game.left);
+					playerObj.video.style.marginRight = Math.floor(sw * json.game.right);
+					playerObj.video.style.marginTop = 0-Math.floor(sh * json.game.top);
+					playerObj.video.style.marginBottom = Math.floor(sh * json.game.bottom);
+				});
+			}
+
+			function copyTimerFrame(playerObj, x, y, w, h) {
+				if(playerObj.video.paused || playerObj.video.ended || playerObj.ignoreTimer) {
+					return false;
+				}
+				
+				playerObj.timer.getContext('2d').drawImage(playerObj.video, x, y, w, h, 0, 0, playerObj.timer.width, playerObj.timer.height);
+				playerObj.copyTimer = setTimeout(copyTimerFrame, 12, playerObj, x, y, w, h);
+			}
+		</script>
+	</body>
+</html>
